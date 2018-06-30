@@ -1,0 +1,103 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.shh.test'
+
+//testExtension {
+//    message 'Hello Gradle'
+//}
+
+println "app config start"
+
+def static releaseTime() {
+    return new Date().format("yyyyMMddHHmm")
+}
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.shh.studygradle"
+        minSdkVersion 14
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("study.jks")
+            keyAlias "study"
+            keyPassword "123456"
+            storePassword "123456"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('release.apk')) {
+                        def fileName = "StudyGradle${releaseTime()}_v${defaultConfig.versionName}_${variant.productFlavors[0].name}.apk"
+                        outputFileName = fileName
+                    }
+                }
+            }
+        }
+    }
+
+    flavorDimensions "a"
+    productFlavors {
+        online {
+            dimension "a"
+        }
+        offline {
+            dimension "a"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+task test1 {
+    println "test1 task is executed"
+
+    afterEvaluate {
+        def adt = tasks.findByName("assembleDebug")
+        adt.doFirst {
+            println "execute before assembleDebug task Execution"
+        }
+
+        adt.doLast {
+            println "execute after assembleDebug task Execution"
+        }
+    }
+}
+
+task testBoth {
+    dependsOn("test1")
+    doFirst {
+        println "testBoth task:doFirst is executed"
+    }
+    doLast {
+        println "testBoth task:doLast is executed"
+    }
+    println "testBoth task is executed"
+}
+
+afterEvaluate {
+    println "app evaluate start"
+    println "app evaluate end"
+}
+
+println "app config end"
