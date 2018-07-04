@@ -49,13 +49,28 @@ android {
         }
     }
 
-    flavorDimensions "a"
+    flavorDimensions "a", "b"
     productFlavors {
-        online {
+        free {
             dimension "a"
+            manifestPlaceholders = [icon: "@mipmap/ic_launcher_round"]
+            resValue "string", "appName", '"SG-free"'
         }
-        offline {
+
+        Pay {
             dimension "a"
+            manifestPlaceholders = [icon: "@mipmap/ic_launcher"]
+            resValue "string", "appName", '"SG-pay"'
+        }
+
+        online {
+            dimension "b"
+            buildConfigField "String", "TIP", '"online version"'
+        }
+
+        offline {
+            dimension "b"
+            buildConfigField "String", "TIP", '"offline version"'
         }
     }
 }
