@@ -1,5 +1,5 @@
 package com.shh.plugin
 
-class TestPluginExtension {
+class PluginTest0Extension {
     String message = 'Hello World'
 }

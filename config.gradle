@@ -1,0 +1,9 @@
+project.task("PluginTest1") {
+    doFirst {
+        println("$project.name:PlungTest1 doFirst")
+    }
+
+    doLast {
+        println("$project.name:PlungTest1 doLast")
+    }
+}

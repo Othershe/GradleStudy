@@ -1,9 +1,26 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.shh.test'
 
-//testExtension {
-//    message 'Hello Gradle'
-//}
+apply plugin: 'com.shh.test'
+pluginTest0Extension {
+    message 'Hello Gradle'
+}
+
+apply from: '../config.gradle'
+
+apply plugin: PluginTest2
+
+class PluginTest2 implements Plugin<Project>{
+
+    @Override
+    void apply(Project target) {
+        target.task("PluginTest2"){
+            it.doLast{
+                println("$target.name:PlungTest2 doLast")
+            }
+        }
+    }
+}
+
 
 println "app config start"
 
@@ -120,17 +137,6 @@ dependencies {
 
 task test1 {
     println "test1 task is executed"
-
-    afterEvaluate {
-        def adt = tasks.findByName("assembleDebug")
-        adt.doFirst {
-            println "execute before assembleDebug task Execution"
-        }
-
-        adt.doLast {
-            println "execute after assembleDebug task Execution"
-        }
-    }
 }
 
 task testBoth {
@@ -144,9 +150,15 @@ task testBoth {
     println "testBoth task is executed"
 }
 
-afterEvaluate {
-    println "app evaluate start"
-    println "app evaluate end"
+project.afterEvaluate {
+    def adt = tasks.findByName("assembleDebug")
+    adt.doFirst {
+        println "execute before assembleDebug task Execution"
+    }
+
+    adt.doLast {
+        println "execute after assembleDebug task Execution"
+    }
 }
 
 println "app config end"
